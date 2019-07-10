@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caddo Search Engine</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+
+<body>
+    <div class="container-fluid">
+		<nav class="navbar navbar-fixed-top" id='engTitle'>
+			<div class="container-fluid">
+			    <p><i class="fa fa-flag" style="padding-right:2px"></i>Sorted by English</p>
+				<!-- custom input area with 'clear' btn -->
+				<input type="text" class="form-control" id="exampleInput1" placeholder="Search List">
+		<!-- end form -->	
+			</div>
+		</nav>
+
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+		<!-- start theme switcher -->
+		
+		<!-- end theme switcher -->
+            <div class="container-fluid">
+                <div class="navbar-header"><a class="navbar-brand navbar-link" href="index.html"><i class="fa fa-gears" style="padding-right:2px"></i>Caddo Search Engine</a>
+                    <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navcol-1"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+                </div>
+                <div class="collapse navbar-collapse" id="navcol-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active" role="presentation"><a href='javascript:void(0);'><i class="fa fa-flag" style="padding-right:2px"></i>Sorted by English</a></li>
+                        <li role="presentation"><a href="has.html"><i class="glyphicon glyphicon-fire" style="padding-right:2px"></i>Sorted by Hasinai</a></li>
+						<li role="presentation">
+                            <a href="nums.html"> <i class="fa fa-calculator" style="padding-right:2px"></i>Numbers</a>
+                        </li>
+						<li role="presentation"><a href='phra.html'><i class="fa fa-commenting" style="padding-right:2px"></i>English Phrases </a></li>
+                        <li role="presentation" id='sendSugg2'><a href='javascript:void(0);'><i class="glyphicon glyphicon-send" style="padding-right:2px"></i>Send Suggestion</a></li>
+						<li id='daCloser'role="presentation"><a href="#"><i class="fa fa-close" style="padding-right:2px"></i>Close App</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="list-group" id='mainList1'>
+		</div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id='mainModal'>
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 id='selectedTitle1' class="modal-title">Modal Title</h4></div>
+                <div id='selectedBody1' class="modal-body">
+                    <p>The content of your modal.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+	
+	<div class="modal fade" role="dialog" tabindex="-1" id='mainModal2'>
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+						<h4 class="modal-title">Send Suggestion</h4></div>
+					<div class="modal-body">
+						<p>Select the link below to send a suggestion to the Caddo Search Engine.</p>
+						<p>NOTE: This link will open a form on a web browser.</p><br>
+						<p><a href='https://docs.google.com/forms/d/e/1FAIpQLSdkUoxfdXVqfSd0UB7j8r_LabiQMOwDR4CxcUf7MEVDDeqYSw/viewform' target='_blank' style='word-wrap: break-word;'>https://docs.google.com/forms/d/e/1FAIpQLSdkUoxfdXVqfSd0UB7j8r_LabiQMOwDR4CxcUf7MEVDDeqYSw/viewform</a></p>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+	<script src="assets/js/bootstrap-add-clear.min.js"></script>
+
+    <!--Custom Code-->
+	<script>
+		//function to setup MIMEtype, to overcome error during display on local server
+		$.ajaxSetup({beforeSend: function(xhr){
+		  if (xhr.overrideMimeType) {
+			xhr.overrideMimeType("application/json");
+		  }
+		}
+		});//end of MIMEtype function
+		
+		var items = []; //new array called 'items' to hold JSON data
+		var localData; //holds localstorage data
+		var dataToStore; //holder for stringified JSON list
+		var getThisID; //get the ID # of item being selected
+
+		if (window.localStorage.getItem("cadDataList3") === null) { //look for local storage
+			getBigData(); //if it does NOT exist, make it
+			} else {
+			makeList(); //if it DOES exist, use it to make list
+		}
+		
+		function getBigData(){ 
+		//start JSON data handling
+			$.getJSON( "data/list.json", function( data ) {
+				dataToStore = JSON.stringify(data);
+				window.localStorage.setItem('cadDataList3', dataToStore);
+				makeList();					
+			});
+			//end JSON data handling
+		}
+		function makeList() {
+			localData = JSON.parse(window.localStorage.getItem('cadDataList3'));
+			$.each( localData, function( index, d ) {//for each entry in the data, format the array
+				items.push( "<!--" + d.eng + "--><a href='javascript:void(0);' class='list-group-item' id='" + index + "'><span>" + "<class='list-group-item-heading'>" + d.eng + "</span></a>" );
+			});
+			items.sort(); //uses commented-out section to sort
+			//add data to new list group
+			$('#mainList1').html(items);
+			//click function for list items
+			$('.list-group-item').click(function() {
+				//console.log($(this).attr('id'));
+				getThisID = $(this).attr('id')
+				userSelection();
+			});
+		}
+
+		//start function to populate modal screen
+		function userSelection() {				
+			var modTitle = '';
+			var modMarks = localData[getThisID].marks;
+			var modEng = localData[getThisID].eng;
+			var modPOS = localData[getThisID].pos;
+			var modCad = localData[getThisID].caddo;
+			var modLink = localData[getThisID].audio_link;
+			var modCred = localData[getThisID].credit;			
+	
+			if (modMarks) { //check for special diacritic punctuation marks
+			//populate modal title
+			$('#selectedTitle1').html('<strong>' + modEng + '</strong>');
+				 //swap out regular spelling, if diacritic marks exist
+				if (!modLink) { // if this entry has NO audio link
+				
+					$('#selectedBody1').html('<p>part of speech: <em>/ ' + modPOS + ' /</em></p><p><em>Hasinai:</em> ' + modMarks + '</p><p>Possible pronunciation: <em>' + modMarks + '</em></p><p id="myCred">source: ' + modCred + '</p>');
+					if (!modCred) {
+						$('#myCred').html('');
+					}
+				}
+				if (modLink) { //if it has an audio link, display it in the modal
+				
+					//populate modal title
+					$('#selectedTitle1').html('<strong>' + modEng + '</strong>');
+					
+					$('#selectedBody1').html('<p>part of speech: <em>/ ' + modPOS + ' /</em></p><p><em>Hasinai:</em> ' + modMarks + '</p><p>Possible pronunciation: <em>' + modCad + '</em></p><p>hear it (requires internet connection): <audio controls> <source src="' + modLink + '" type="audio/mpeg"><a href="' + modLink + '" target="_blank" style="word-wrap: break-word;">' + modLink + '</a></audio></p><p id="myCred">source: ' + modCred + '</p>');
+					
+					if (!modCred) {
+					console.log('CRED not exist');
+						$('#myCred').html('');
+					}
+				}					
+			}
+			if (!modMarks) { // if NO special diacritic punctuation marks, show old spelling
+				console.log('mod marks NOT exist');
+				//populate modal title
+				$('#selectedTitle1').html('<strong>' + modEng + '</strong>');
+				if (!modLink) { // if this entry has NO audio link
+					$('#selectedBody1').html('<p>part of speech: <em>/ ' + modPOS + ' /</em></p><p><em>Hasinai:</em> ' + modCad + '</p><p id="myCred">source: ' + modCred + '</p>');
+					if (!modCred) {
+						$('#myCred').html('');
+					}
+				}
+				if (modLink) { //if it has an audio link, display it in the modal
+					$('#selectedBody1').html('<p>part of speech: <em>/ ' + modPOS + ' /</em></p><p><em>Hasinai:</em> ' + modCad + '</p><p>hear it (requires internet connection): <audio controls> <source src="' + modLink + '" type="audio/mpeg"><a href="' + modLink + '" target="_blank" style="word-wrap: break-word;">' + modLink + '</a></audio></p><p id="myCred">source: ' + modCred + '</p>');
+					if (!modCred) {
+						$('#myCred').html('');
+					}
+				}
+			}
+			//now show modal with new info
+			$("#mainModal").modal();
+		 };
+		//end function to populate modal screen
+		//start 'dynamic list' function
+		$('#exampleInput1').keyup(function(){
+			var valThis = this.value.toLowerCase().replace(/[\[\].,\/!$%\^&\*;:{}=\-_`~()\·\s']/g,"");			
+			if(valThis == ""){
+				$('.list-group-item').show();           
+			} else {
+				$('.list-group-item').each(function(){
+					var text = $(this).text().toLowerCase().replace(/[\[\].,\/!$%\^&\*;:{}=\-_`~()\·\s']/g,"");
+					(text.indexOf(valThis) >= 0) ? $(this).show() : $(this).hide();
+				});
+		   };
+		});	
+		//end 'dynamic' function
+		$(function(){
+		  $(":input").addClear();
+		});
+
+		$(":input").addClear({
+		  onClear: function(){
+			console.log("Input Cleared!");
+			$('.list-group-item').show();  
+		  }
+		  });
+		$('#sendSugg2').click(function() {
+			$("#mainModal2").modal();
+		});
+		$('#daCloser').click(function exitFromApp() {
+				if (navigator.app) {
+				   navigator.app.exitApp();
+				}
+				else if (navigator.device) {
+					navigator.device.exitApp();
+			}
+		});	
+	</script>
+</body>
+
+</html>

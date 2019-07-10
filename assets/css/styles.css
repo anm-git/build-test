@@ -1,0 +1,39 @@
+
+span{
+  color:white;
+}
+body {
+	background-color: black;
+	color: white;
+}
+#splashLoader {
+	top:0;
+	position:absolute;
+	z-index:9999;
+    background: black; /* For browsers that do not support gradients */
+    background: -webkit-radial-gradient(#222222, black); /* Safari 5.1 to 6.0 */
+    background: -o-radial-gradient(#222222, black); /* For Opera 11.6 to 12.0 */
+    background: -moz-radial-gradient(#222222, black); /* For Firefox 3.6 to 15 */
+    background: radial-gradient(#222222, black); /* Standard syntax (must be last) */
+	display: flex;
+    text-align: center;
+    justify-content: center;
+	min-width:100%;
+	min-height:100%;
+	flex-direction: column;
+}
+#splashLoader img {
+	margin: auto;
+	max-width: 45%;
+}
+#mainList1 {
+	margin-top: 80px;
+	margin-bottom: 70px;
+}
+#mainList2 {
+	margin-top: 80px;
+	margin-bottom: 70px;
+}
+#engTitle {
+	background-color:#222222;
+}
